@@ -138,7 +138,7 @@ def fetch_available_models(provider: str, api_key: str) -> List[str]:
         st.warning(f"An unexpected error occurred while fetching models: {e}")
         return []
 
-@st.cache_data(ttl=300)  # Cache for 5 minutes
+@st.cache_data(ttl=300) # Cache for 5 minutes
 def scrape_and_clean(url: str) -> Dict[str, Any]:
     """
     Scrape and clean website content using BeautifulSoup.
