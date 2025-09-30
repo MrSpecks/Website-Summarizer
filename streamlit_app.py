@@ -138,7 +138,7 @@ def fetch_available_models(provider: str, api_key: str) -> List[str]:
         st.warning(f"An unexpected error occurred while fetching models: {e}")
         return []
 
-@st.cache_data(ttl=300) # Cache for 5 minutes
+# Caching decorator removed to resolve UnserializableReturnValueError
 def scrape_and_clean(url: str) -> Dict[str, Any]:
     """
     Scrape and clean website content using BeautifulSoup.
@@ -177,7 +177,7 @@ def scrape_and_clean(url: str) -> Dict[str, Any]:
         }
         
     except requests.exceptions.RequestException as e:
-        # FIX: Explicitly cast exception message to string to prevent UnserializableReturnValueError
+        # Explicitly cast exception message to string to prevent Streamlit cache errors (though caching is now disabled)
         error_msg = str(e)
         return {
             "title": None,
@@ -187,7 +187,7 @@ def scrape_and_clean(url: str) -> Dict[str, Any]:
             "error": f"Network error: {error_msg}"
         }
     except Exception as e:
-        # FIX: Explicitly cast exception message to string to prevent UnserializableReturnValueError
+        # Explicitly cast exception message to string to prevent Streamlit cache errors (though caching is now disabled)
         error_msg = str(e)
         return {
             "title": None,
@@ -385,6 +385,7 @@ def main():
         # 1. Scraping phase
         st.subheader("📥 Scraping Website Content")
         with st.spinner(f"Scraping content from {url}..."):
+            # Removed caching call here
             scraped_data = scrape_and_clean(url)
         
         if scraped_data["status"] == "error":
