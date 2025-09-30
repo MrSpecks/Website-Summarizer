@@ -6,7 +6,6 @@ from openai import OpenAI, APIError
 import time
 from typing import Optional, Dict, Any, List
 
-
 # --- LLM Configuration Mappings ---
 # Define supported providers and their API characteristics
 LLM_CONFIGS = {
@@ -139,7 +138,7 @@ def fetch_available_models(provider: str, api_key: str) -> List[str]:
         st.warning(f"An unexpected error occurred while fetching models: {e}")
         return []
 
-@st.cache_data(ttl=300)  # Cache for 5 minutes
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def scrape_and_clean(url: str) -> Dict[str, Any]:
     """
     Scrape and clean website content using BeautifulSoup.
@@ -178,20 +177,24 @@ def scrape_and_clean(url: str) -> Dict[str, Any]:
         }
         
     except requests.exceptions.RequestException as e:
+        # FIX: Explicitly cast exception message to string to prevent UnserializableReturnValueError
+        error_msg = str(e)
         return {
             "title": None,
             "text": None,
             "url": url,
             "status": "error",
-            "error": f"Network error: {str(e)}"
+            "error": f"Network error: {error_msg}"
         }
     except Exception as e:
+        # FIX: Explicitly cast exception message to string to prevent UnserializableReturnValueError
+        error_msg = str(e)
         return {
             "title": None,
             "text": None,
             "url": url,
             "status": "error",
-            "error": f"Parsing error: {str(e)}"
+            "error": f"Parsing error: {error_msg}"
         }
 
 
